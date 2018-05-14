@@ -32,7 +32,7 @@ void UL1()
   //serial printing starts from here
   Serial.print("\n The Distance is:");
   Serial.print(cm);
-  if(cm<12)
+  if(cm<350)
   {
    Blynk.virtualWrite(V0,HIGH); 
   }
