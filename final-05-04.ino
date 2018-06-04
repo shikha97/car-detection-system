@@ -67,18 +67,17 @@ void analogsensor()
   Serial.print("Light is:");
   Serial.println(light);
   light = map(light, 0, 1023, 0, 100);
-  Blynk.virtualWrite(V12, light);
+  Blynk.virtualWrite(V12, light);// display light on the app
 
-  delay(1000);
-
+  delay(500);
   digitalWrite(D8, HIGH);
   soil = analogRead(A0);
   Serial.print("Moisture is:");
   Serial.println(soil);
   soil = map(soil, 0, 1023, 0, 100);
   Blynk.virtualWrite(V13, soil);
-
-  delay(1000);
+  delay(500);
+  
   Serial.print("pinValue1 is");
   Serial.println(pinValue1);
   Serial.print("pinValue2 is");
@@ -95,27 +94,31 @@ void ext_switch_master()
   Serial.print("x:");
   Serial.println(x);
 
-  if (x == LOW)
-  { timer.setInterval(500L, sendSensor);
-    timer.setInterval(500L, analogsensor);
-    timer.setInterval(500L, ctrl_pump);
-    timer.setInterval(500L, ctrl_light);
-    Blynk.virtualWrite(V25, 0);
+  if (x == LOW)// slave mode: AUTOMATIC
+  { Blynk.virtualWrite(V25, 0);
+    sendSensor();
+    analogsensor();
+    ctrl_pump();
+    ctrl_light();
+    
   }
   else
-  { int a=digitalRead(D3);
+  { Blynk.virtualWrite(V25, 255);
+    int a=digitalRead(D3);
     if(a==HIGH)
     {
-      digitalWrite(D6,HIGH);
+      digitalWrite(D7,HIGH);
     }
     else
     {
       digitalWrite(D7,LOW);
+      
     }
-    int b=digitalRead(D8);
+    int b=digitalRead(D0);
+    
     if(b==HIGH)
     {
-      digitalWrite(D6,HIGH);
+       digitalWrite(D6,HIGH);
     }
     else
     {
@@ -123,7 +126,7 @@ void ext_switch_master()
     }
     Blynk.virtualWrite(V25, 255);
   }
-  delay(500);
+  //delay(500);
 }
 void ctrl_pump()
 {
@@ -164,7 +167,6 @@ void ctrl_pump()
   {
     digitalWrite(D7, HIGH);
   }
-
 }
 }
 
@@ -172,7 +174,7 @@ void ctrl_light()
 {
   if (digitalRead(D1) == LOW)
   {
-    if (digitalRead(1) == LOW)
+    if (digitalRead(D0) == LOW)
     {
       if (pinValue3 == 1)
       {
@@ -213,20 +215,20 @@ void setup()
 {
   Serial.begin(9600);
   Blynk.begin(auth, ssid, pass);
-  pinMode(D1, INPUT);
-  pinMode(D2, INPUT);
-  pinMode(D3, INPUT);
-  pinMode(D4, INPUT);
-  pinMode(D5, OUTPUT);
-  pinMode(D6, OUTPUT);
-  pinMode(D7, OUTPUT);
-  pinMode(D8, OUTPUT);
+  pinMode(D1, INPUT);//master switch
+  pinMode(D2, INPUT);//dht
+  pinMode(D0, INPUT);//light switch
+  pinMode(D5, OUTPUT);//in4
+  pinMode(D6, OUTPUT);//in3
+  pinMode(D7, OUTPUT);//in2
+  pinMode(D8, OUTPUT);//in1
   dht.begin();
+  timer.setInterval(1000L, ext_switch_master);
   //timer.setInterval(500L, sendSensor);
   //timer.setInterval(500L, analogsensor);
   //timer.setInterval(500L, ctrl_pump);
   //timer.setInterval(500L, ctrl_light);
-  timer.setInterval(500L, ext_switch_master);
+  
 }
 
 void loop()
