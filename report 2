@@ -1,0 +1,28 @@
+A REPORT ON 
+PARKING MANAGEMENT SYSTEM
+
+
+
+PREPARED BY:
+HARSHIT MOHAN
+ABHILASH NAIR
+GAURAV CHOWDA
+SHANATANU CHAKOLE
+SHIKHA VERMA
+ABHIMANYU OLLA
+
+
+
+
+
+
+
+
+
+AIM:
+To display the free parking slots at the entry of each parking space and also specify the parking from General Managers.
+
+WORK DONE:
+To achieve the above stated problem, we first started with the Raspberry Pi and decided to determine the free parking spaces with the help of image processing. But then we realised that this process would take lot of time and it would be very costly and also inefficient. The solution would be costly because of the large number of high quality cameras .
+So we decided to change this approach and we stared thinking of some other ways to achieve our goal. In doing so, we came up with the idea of using ultrasonic sensors which determine how far an object is form the sensor. Then we used five of these sensors  to test our idea and propose a solution level implementation. The basic logic was that if the distance predicted by the sensor is less than a specified distance the parking is classified as  free or empty.
+
