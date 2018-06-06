@@ -1,0 +1,70 @@
+Problem Statement:
+Larsen and Toubro’s Knowledge City campus is spread over xx . In a day yy vehicles belonging to employees enter through a sevice road, enter the campus and are parked in 3 basements and zz open parkings. 
+Office hours range from 8:45 and 17:40. Biometric punching in is mandatory before 8:44. As a result, a majority of the employees reach the office between 8:25 and 8:50. During this period the single line service road and the campus, both occupied primarily by the LnT employees witnesses exceeding the speed limit of 15km/h. //Abhilash’s part No action can be taken in the current system. 
+The basement parking can accommodate around ll cars where some parkings are reserved for employees belonging to the General Manager and above grades. This parking has the maximum takers as the cars remain cool. These parkings get filled by 8:30. Each of these basement parking systems is managed by two security men. One of them directs the cars to the basement while the other keeps a count of cars entering the basement and ensures that after the basement is full, cars don’t keep on entering the basement. 
+Solutions proposed:
+The problem statement was divided into two parts. The first part involved providing solutions for the overspeeding problem and the second part involved the solution to the parking management system.
+Overpeeding :
+This solution involved using two IR sensors separated by a given distance ‘d’ . If a car crosses the distance ‘d’ in a time ‘t’ such that the speed ‘s’ = d/t . If the speed is above 15km/h  a camera clicks a picture of the defaulting vehicle. The image is processed and the registration number of the car is extracted from the image and the details of the car, name and email-address of the defaulting driver are fetched from the database and emails are sent to the defaulter with the timestamp and image of the car. Necessary actions can also be taken based on this information. 
+Parking Management System:
+1)	Software based solution: This involved continuous processing of images being streamed from the parking and correctly identifying  the vacant and filled parking spots using computer vision and displaying the result on a screen at the entrance of the parking.  This solution would require an expensive investment in cameras. Since the parking is quite large and has a circular shape, more cameras will be required and each camera would desirably be of high quality and consequently, expensive. The efficiency of this system was doubted as the desired processing speed is very high.
+2)	Hardware based solution: This solution involed the usage of one ultrasound sensor per parking, attached to the ceiling. The ultrasound sensor would return the height at which an object is present on the ground. We used the difference between the height of ground and the height of the smallest smallest car to predict whether the parking is full or vacant. The result was displayed on a screen at the entrance of the basement parking.  This offers high efficiency.
+
+The hardware based solution was chosen to be implemented. 
+
+The solution level Implementation:
+
+Overspeeding
+
+Tools Used:
+1)	IR sensors 
+2)	Wires
+3)	Power Supply
+4)	Raspberry Pi
+5)	Number Plate Recognition System
+6)	Database containing registered vehicle number of car and corressponding information
+7)	SMTP server to send the email
+Logic: 
+Two IR sensors are used. Both the sensors were connected to the same Raspberry Pi. The IR sensors are separated by a distance ‘d ‘ , which is known to us. When a car passes each of the sensors, a timestamp is generated. The difference between the times t1 and t2  is deltaT.  
+	deltaT=t2-t1
+We know that, speed is the ratio between the distance covered and the time taken to cover the distance.
+So, speed s can be equated as;
+	s=d/deltaT
+The speed limit  is 15km/h . 
+If s>15 , then d/deltaT>15
+Implies that, if deltaT < d/15 then overspeeding. 
+In that case, a camera clicks the picture of the defaulting car and the image is saved with the corresponding timestamps. On the remote location, where the image is stored a program is running which uses localization algorithm to get the part of the image which has the licence plate. The processing algorithm which has learnt English alphanumeric characters identifies the text from the localized image. 
+The numberplate is used to search the database which includes the unique employee id , corresponding email address and vehicle number.
+The SMTP server sends emails to the deafulters with the timestamps and image captured on behalf of the adminstrators. Necessary actions can be taken against the defaulters.
+Parking Management System
+
+Tools Used:
+1)	Ultrasonic Sensors 
+2)	Node MCU
+3)	Wires
+4)	Power Supply
+5)	Blynk App and Server
+Logic:
+The basic logic used to complete the project is based on the difference of the distance when a car is parked or not. The distance from the ceiling to the floor is known to us. So when a car is not parked, the distance came out to be somewhere around 250cm to 300 cm depending because the height of the ceiling was not uniform everywhere. But when a car was parked, the distance from the roof to the car came out to be 80-100cm depending on the height of the car. So based on this difference of distances, we were able to detect whether the parking is full or vacant. This solution was particularly proposed for the basement parking as the driver wouldn’t have to go down to check for free space to park the car but this can also be implemented at other parkings.
+First we thought of using an Arduino board to drive our project. But the major issue with the Arduino boards are that they don’t have inbuilt WiFi. So we researched online and found this miniature version of Arduino called the NodeMCU board which has inbuilt WiFi. This was very helpul as by using this board, we can send the data about the parking spaces to any sercer that are already created and give us a pleasing user interface or we can upload it to a custom server and create our own application.
+In order to find a way to display our data on the screen, we found out this application called Blynk which can be easily intergrated with the NodeMCU board and it gives us a customisable user interface to work with.
+ 
+As we can see, there are two parking colours. One is Yellow which show parking for regular employees and the Red one shows the parking spaces for the manager level people.
+The figure shows the connection diagram that we used to complete the project.
+
+
+
+ 
+
+
+
+
+References:
+1)	https://www.raspberrypi.org/forums/viewtopic.php?t=60622
+2)	https://www.hackster.io/helloworld1997/ultrasonic-sensor-with-blynk-and-nodemcu-50c074
+3)	http://www.instructables.com/id/Distance-Measurement-Using-HC-SR04-Via-NodeMCU/
+4)	http://nodemcu.com/index_en.html
+5)	https://www.raspberrypi.org/products/raspberry-pi-3-model-b/
+6)	
+
+ 
